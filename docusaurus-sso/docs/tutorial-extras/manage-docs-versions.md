@@ -1,0 +1,49 @@
+---
+sidebar_position: 1
+---
+
+# Manage Docs Versions
+
+import LessonTabs from '@site/src/components/LessonTabs';
+
+<LessonTabs 
+  lessonId="manage-docs-versions"
+  originalContent={`
+    <h2>Manage Docs Versions</h2>
+    <p>Docusaurus can manage multiple versions of your docs.</p>
+
+    <h2>Create a docs version</h2>
+    <p>Release a version 1.0 of your project:</p>
+    <pre><code class="language-bash">npm run docusaurus docs:version 1.0</code></pre>
+    <p>The <code>docs</code> folder is copied into <code>versioned_docs/version-1.0</code> and <code>versions.json</code> is created.</p>
+    <p>Your docs now have 2 versions:</p>
+    <ul>
+      <li><code>1.0</code> at <a href="http://localhost:3000/docs/">http://localhost:3000/docs/</a> for the version 1.0 docs</li>
+      <li><code>current</code> at <a href="http://localhost:3000/docs/next/">http://localhost:3000/docs/next/</a> for the <strong>upcoming, unreleased docs</strong></li>
+    </ul>
+
+    <h2>Add a Version Dropdown</h2>
+    <p>To navigate seamlessly across versions, add a version dropdown.</p>
+    <p>Modify the <code>docusaurus.config.js</code> file:</p>
+    <pre><code class="language-js">export default {
+  themeConfig: {
+    navbar: {
+      items: [
+        {
+          type: 'docsVersionDropdown',
+        },
+      ],
+    },
+  },
+};</code></pre>
+    <p>The docs version dropdown appears in your navbar:</p>
+    <p><img src="./img/docsVersionDropdown.png" alt="Docs Version Dropdown" /></p>
+
+    <h2>Update an existing version</h2>
+    <p>It is possible to edit versioned docs in their respective folder:</p>
+    <ul>
+      <li><code>versioned_docs/version-1.0/hello.md</code> updates <a href="http://localhost:3000/docs/hello">http://localhost:3000/docs/hello</a></li>
+      <li><code>docs/hello.md</code> updates <a href="http://localhost:3000/docs/next/hello">http://localhost:3000/docs/next/hello</a></li>
+    </ul>
+  `}
+/>

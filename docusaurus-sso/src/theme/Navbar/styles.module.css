@@ -1,0 +1,18 @@
+.authButtonContainer {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 0.75rem;
+    position: relative;
+}
+
+/* Ensure proper spacing - auth button appears before GitHub icon */
+.authButtonContainer::after {
+    content: '';
+    width: 0.5rem;
+}
+
+@media (max-width: 996px) {
+    .authButtonContainer {
+        margin-right: 0.5rem;
+    }
+}

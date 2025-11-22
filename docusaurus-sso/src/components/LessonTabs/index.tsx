@@ -50,7 +50,7 @@ export default function LessonTabs({ lessonId, originalContent }: LessonTabsProp
             const response = await fetch(`http://localhost:3001/api/lessons/${lessonId}/summary`, {
                 credentials: 'include',
             });
-            
+
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
                 if (response.status === 401) {
@@ -62,7 +62,7 @@ export default function LessonTabs({ lessonId, originalContent }: LessonTabsProp
                 }
                 throw new Error(errorData.error || `Failed to load summary (${response.status})`);
             }
-            
+
             const data = await response.json();
             if (!data.summary) {
                 throw new Error('Summary data is empty');
@@ -94,6 +94,7 @@ export default function LessonTabs({ lessonId, originalContent }: LessonTabsProp
                 if (response.status === 401) {
                     throw new Error('Authentication required. Please sign in.');
                 } else if (response.status === 400) {
+                    // Onboarding requirement error - will be handled by the UI
                     throw new Error(errorData.error || 'Please complete onboarding first.');
                 } else if (response.status === 404) {
                     throw new Error(`Lesson "${lessonId}" not found in database. Please ensure the lesson exists.`);
@@ -156,11 +157,11 @@ export default function LessonTabs({ lessonId, originalContent }: LessonTabsProp
                     {error ? (
                         <div className={styles.error}>
                             <strong>Error:</strong> {error}
-                            <button 
-                                onClick={loadSummary} 
-                                style={{ 
-                                    marginTop: '1rem', 
-                                    padding: '0.5rem 1rem', 
+                            <button
+                                onClick={loadSummary}
+                                style={{
+                                    marginTop: '1rem',
+                                    padding: '0.5rem 1rem',
                                     cursor: 'pointer',
                                     backgroundColor: '#667eea',
                                     color: 'white',
@@ -192,23 +193,34 @@ export default function LessonTabs({ lessonId, originalContent }: LessonTabsProp
             return (
                 <div className={styles.content}>
                     {error ? (
-                        <div className={styles.error}>
-                            <strong>Error:</strong> {error}
-                            <button
-                                onClick={loadPersonalizedContent}
-                                style={{
-                                    marginTop: '1rem',
-                                    padding: '0.5rem 1rem',
-                                    cursor: 'pointer',
-                                    backgroundColor: '#667eea',
-                                    color: 'white',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                }}
-                            >
-                                Retry
-                            </button>
-                        </div>
+                        error.includes('onboarding') || error.includes('proficiency') ? (
+                            <div className={styles.authRequired}>
+                                <div className={styles.authIcon}>📝</div>
+                                <h3>Complete Your Profile First</h3>
+                                <p>To access personalized content tailored to your level, please complete your proficiency profile.</p>
+                                <a href="/onboarding" className={styles.signInLink}>
+                                    Complete Proficiency Profile
+                                </a>
+                            </div>
+                        ) : (
+                            <div className={styles.error}>
+                                <strong>Error:</strong> {error}
+                                <button
+                                    onClick={loadPersonalizedContent}
+                                    style={{
+                                        marginTop: '1rem',
+                                        padding: '0.5rem 1rem',
+                                        cursor: 'pointer',
+                                        backgroundColor: '#667eea',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                    }}
+                                >
+                                    Retry
+                                </button>
+                            </div>
+                        )
                     ) : (
                         <ReactMarkdown remarkPlugins={[remarkGfm]} className={styles.markdownContent}>
                             {personalizedContent}

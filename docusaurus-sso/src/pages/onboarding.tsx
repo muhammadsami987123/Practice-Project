@@ -5,13 +5,17 @@ import styles from './onboarding.module.css';
 type ProficiencyLevel = 'Beginner' | 'Intermediate' | 'Expert';
 
 export default function Onboarding(): JSX.Element {
-    const [aiProficiency, setAiProficiency] = useState<ProficiencyLevel>('Beginner');
-    const [programmingProficiency, setProgrammingProficiency] = useState<ProficiencyLevel>('Beginner');
+    const [aiProficiency, setAiProficiency] = useState<ProficiencyLevel | null>(null);
+    const [programmingProficiency, setProgrammingProficiency] = useState<ProficiencyLevel | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const isFormValid = aiProficiency !== null && programmingProficiency !== null;
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!isFormValid) return;
+
         setLoading(true);
         setError('');
 
@@ -82,7 +86,7 @@ export default function Onboarding(): JSX.Element {
                     <form onSubmit={handleSubmit} className={styles.form}>
                         {/* AI Proficiency Section */}
                         <div className={styles.section}>
-                            <h2 className={styles.sectionTitle}>AI Proficiency Level</h2>
+                            <h2 className={styles.sectionTitle}>AI Proficiency Level <span style={{ color: 'red' }}>*</span></h2>
                             <p className={styles.sectionDescription}>
                                 How familiar are you with AI and machine learning concepts?
                             </p>
@@ -113,7 +117,7 @@ export default function Onboarding(): JSX.Element {
 
                         {/* Programming Proficiency Section */}
                         <div className={styles.section}>
-                            <h2 className={styles.sectionTitle}>Programming Proficiency Level</h2>
+                            <h2 className={styles.sectionTitle}>Programming Proficiency Level <span style={{ color: 'red' }}>*</span></h2>
                             <p className={styles.sectionDescription}>
                                 What's your experience with programming and software development?
                             </p>
@@ -147,7 +151,8 @@ export default function Onboarding(): JSX.Element {
                         <button
                             type="submit"
                             className={styles.submitButton}
-                            disabled={loading}
+                            disabled={loading || !isFormValid}
+                            style={{ opacity: !isFormValid ? 0.5 : 1, cursor: !isFormValid ? 'not-allowed' : 'pointer' }}
                         >
                             {loading ? 'Saving...' : 'Complete Setup'}
                         </button>

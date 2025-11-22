@@ -175,7 +175,10 @@ app.get('/api/auth/google/callback', async (req, res) => {
 
         const sessionId = await createSession(user.id, user.tenantId);
         res.cookie('sessionId', sessionId, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
-        res.redirect(`${CLIENT_URL}/`);
+
+        // Redirect to onboarding if not completed, otherwise to home
+        const redirectUrl = user.hasCompletedOnboarding ? `${CLIENT_URL}/` : `${CLIENT_URL}/onboarding`;
+        res.redirect(redirectUrl);
     } catch (error) {
         console.error('Google Auth Error:', error);
         res.redirect(`${CLIENT_URL}/auth/signin?error=Google auth failed`);
@@ -203,7 +206,10 @@ app.get('/api/auth/github', async (req, res) => {
 
         const sessionId = await createSession(user.id, user.tenantId);
         res.cookie('sessionId', sessionId, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
-        res.redirect(`${CLIENT_URL}/`);
+
+        // Redirect to onboarding if not completed, otherwise to home
+        const redirectUrl = user.hasCompletedOnboarding ? `${CLIENT_URL}/` : `${CLIENT_URL}/onboarding`;
+        res.redirect(redirectUrl);
     } catch (e) {
         console.error('GitHub auth error:', e);
         res.redirect(`${CLIENT_URL}/auth/signin?error=GitHub auth failed`);

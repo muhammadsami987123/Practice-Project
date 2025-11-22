@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import styles from './signin.module.css'; // Reuse signin styles
 
 export default function SignUp() {
+    const { siteConfig } = useDocusaurusContext();
+    const apiUrl = siteConfig.customFields?.apiUrl as string;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
@@ -15,7 +18,7 @@ export default function SignUp() {
         setError('');
 
         try {
-            const response = await fetch('http://localhost:3001/api/auth/sign-up', {
+            const response = await fetch(`${apiUrl}/api/auth/sign-up`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,7 +42,7 @@ export default function SignUp() {
     };
 
     const handleSocialSignIn = (provider: 'github' | 'google') => {
-        window.location.href = `http://localhost:3001/api/auth/${provider}`;
+        window.location.href = `${apiUrl}/api/auth/${provider}`;
     };
 
     return (
